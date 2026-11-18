@@ -16,6 +16,7 @@ pub struct Config {
     pub typing: Typing,
     pub hooks: Hooks,
     pub log: Log,
+    pub notify: Notify,
 }
 
 #[derive(Debug, Clone, Copy, Deserialize, PartialEq, Eq)]
@@ -137,6 +138,21 @@ pub struct Hooks {
     pub on_recording: Vec<String>,
     /// Run when recording ends (stopped, cancelled or failed).
     pub on_idle: Vec<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Notify {
+    /// Longest popup body, in characters. Longer transcripts show "…" and
+    /// their end, so the newest words stay visible. Match it to what your
+    /// notification daemon's popup size can show.
+    pub max_chars: usize,
+}
+
+impl Default for Notify {
+    fn default() -> Self {
+        Notify { max_chars: 300 }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]

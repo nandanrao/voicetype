@@ -35,10 +35,11 @@ struct Msg {
 #[derive(Clone)]
 pub struct Popup {
     tx: mpsc::UnboundedSender<Msg>,
+    max_chars: usize,
 }
 
 impl Popup {
-    pub fn new() -> Popup {
+    pub fn new(max_chars: usize) -> Popup {
         let (tx, mut rx) = mpsc::unbounded_channel::<Msg>();
         tokio::spawn(async move {
             let mut id: u32 = 0;
@@ -51,7 +52,7 @@ impl Popup {
                 }
             }
         });
-        Popup { tx }
+        Popup { tx, max_chars }
     }
 
     /// `timeout_ms` 0 means "while in progress": long, but finite, so a popup
@@ -64,9 +65,42 @@ impl Popup {
         };
         let _ = self.tx.send(Msg {
             summary: summary.into(),
-            body: body.into(),
+            body: tail(body.into(), self.max_chars),
             timeout_ms,
         });
+    }
+}
+
+/// Notification daemons cut long bodies off at the bottom, which would hide
+/// the newest words of a long dictation, so long bodies show their end.
+
+fn tail(body: String, max: usize) -> String {
+    let count = body.chars().count();
+    if max == 0 || count <= max {
+        return body;
+    }
+    let rest: String = body.chars().skip(count - max).collect();
+    // Start at a word boundary when there is one nearby.
+    let rest = match rest.find(char::is_whitespace) {
+        Some(i) if i < 40 => rest[i..].trim_start().to_string(),
+        _ => rest,
+    };
+    format!("…{rest}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::tail;
+
+    #[test]
+    fn keeps_short_bodies() {
+        assert_eq!(tail("hello world".into(), 50), "hello world");
+    }
+
+    #[test]
+    fn shows_the_end_of_long_bodies() {
+        let t = tail("one two three four five six".into(), 10);
+        assert_eq!(t, "…five six");
     }
 }
 

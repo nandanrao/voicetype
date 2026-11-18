@@ -131,7 +131,7 @@ pub async fn run() -> Result<()> {
                             Ok(c) => cfg = c,
                             Err(e) => {
                                 crate::log!("config error, keeping previous: {e:#}");
-                                Popup::new().show("voicetype · config error", format!("{e:#}"), 8000);
+                                Popup::new(cfg.notify.max_chars).show("voicetype · config error", format!("{e:#}"), 8000);
                             }
                         }
                         let seq = next_seq;
@@ -377,7 +377,7 @@ async fn session(
     } else {
         format!("voicetype · {label}")
     };
-    let popup = Popup::new();
+    let popup = Popup::new(cfg.notify.max_chars);
     popup.show(&title, "Recording…", 0);
 
     let stop = Arc::new(AtomicBool::new(false));

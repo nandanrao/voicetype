@@ -40,6 +40,18 @@ key_file = "~/.config/voicetype/elevenlabs.key"
 
 Check everything with `voicetype test`.
 
+The live transcript appears in a notification that follows your newest words.
+To give it more room in mako:
+
+```ini
+# ~/.config/mako/config
+[app-name=voicetype]
+width=500
+height=200
+```
+
+and set `[notify] max_chars = 500` in the voicetype config to match.
+
 ## Bind a key
 
 `voicetype toggle` is all a key binding needs. The daemon starts by itself on

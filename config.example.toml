@@ -69,6 +69,13 @@ append = " "                   # typed after each transcript, so dictations don'
 # on_recording = ["swaymsg", "mode", "recording"]
 # on_idle = ["swaymsg", "mode", "default"]
 
+[notify]
+# Popups show at most this many characters; a longer transcript shows "…"
+# and its newest words, so the live text keeps scrolling. Match it to your
+# notification daemon's popup size (mako's default 300x100 fits about 150;
+# 500x200 fits about 500).
+max_chars = 300
+
 [log]
 # timing = "~/.local/state/voicetype/timing.log"   # "" disables
 keep_failed_audio = true       # keep recordings that could not be transcribed
