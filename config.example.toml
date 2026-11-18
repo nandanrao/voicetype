@@ -61,7 +61,7 @@ max_seconds = 600              # recordings stop on their own after this
 method = "auto"
 key_delay_ms = 0               # raise if an app drops characters
 # command = ["wl-copy"]        # e.g. put the text on the clipboard instead
-append = ""                    # e.g. " " so back-to-back dictations don't run together
+append = " "                   # typed after each transcript, so dictations don't run together
 
 # Commands (argv, no shell) run when recording starts and ends. Use them to
 # switch your compositor into a mode where Escape cancels; see the README.

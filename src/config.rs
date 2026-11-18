@@ -124,8 +124,8 @@ pub struct Typing {
     /// Delay between characters; 0 is fine for almost every app.
     pub key_delay_ms: u64,
     pub command: Vec<String>,
-    /// Text appended after every transcript (e.g. " " to keep dictations
-    /// that follow each other separated).
+    /// Text typed after every transcript. Defaults to a space so dictations
+    /// that follow each other don't run together; "" turns it off.
     pub append: String,
 }
 
@@ -192,7 +192,7 @@ impl Default for Typing {
             method: TypingMethod::Auto,
             key_delay_ms: 0,
             command: Vec::new(),
-            append: String::new(),
+            append: " ".into(),
         }
     }
 }
